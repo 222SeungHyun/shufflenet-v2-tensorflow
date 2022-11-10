@@ -25,8 +25,8 @@ NUM_EPOCHS = 133  # set 166 for 1.0x version
 TRAIN_DATASET_SIZE = 1281144
 NUM_STEPS = NUM_EPOCHS * (TRAIN_DATASET_SIZE // BATCH_SIZE)
 PARAMS = {
-    'train_dataset_path': '/mnt/datasets/imagenet/train_shards/',
-    'val_dataset_path': '/mnt/datasets/imagenet/val_shards/',
+    'train_dataset_path': 'H:/ILSVRC2012_img_train',
+    'val_dataset_path': 'H:/ILSVRC2012_img_val',
     'weight_decay': 4e-5,
     'initial_learning_rate': 0.0625,  # 0.5/8
     'decay_steps': NUM_STEPS,

@@ -28,12 +28,12 @@ python create_tfrecords.py \
 
 def make_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--metadata_file=training.csv', type=str)
+    parser.add_argument('-m', '--metadata_file', type=str, help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/training_metadata.csv')
     parser.add_argument(
-        '-o', '--output=/mnt/datasets/imagenet/train_shards/', type=str)
-    parser.add_argument('-l', '--labels=integer_encoding.json', type=str)
-    parser.add_argument('-b', '--boxes=boxes.npy', type=str, default='')
-    parser.add_argument('-s', '--num_shards=1000', type=int, default=1)
+        '-o', '--output', type=str, help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/train_shards/')
+    parser.add_argument('-l', '--labels', type=str, help='--labels=C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/integer_encoding.json')
+    parser.add_argument('-b', '--boxes', type=str, default='', help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/boxes.npy')
+    parser.add_argument('-s', '--num_shards', type=int, default=1000)
     return parser.parse_args()
 
 
@@ -139,7 +139,7 @@ def main():
 
     bounding_boxes = None
     if len(ARGS.boxes) > 0:
-        bounding_boxes = np.load(ARGS.boxes)[()]
+        bounding_boxes = np.load(ARGS.boxes, allow_pickle=True)[()]
         print('Number of images with boxes:', len(bounding_boxes))
 
     output_dir = ARGS.output
