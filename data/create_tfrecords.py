@@ -1,7 +1,6 @@
 import io
 import os
 from PIL import Image
-# from PIL.Image
 import tensorflow as tf
 import json
 import numpy as np
@@ -10,7 +9,6 @@ import pandas as pd
 import math
 import argparse
 from tqdm import tqdm
-
 
 """
 The purpose of this script is to create a set of .tfrecords files
@@ -28,11 +26,14 @@ python create_tfrecords.py \
 
 def make_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--metadata_file', type=str, help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/training_metadata.csv')
+    parser.add_argument('-m', '--metadata_file', type=str,
+                        help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/training_metadata.csv')
     parser.add_argument(
         '-o', '--output', type=str, help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/train_shards/')
-    parser.add_argument('-l', '--labels', type=str, help='--labels=C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/integer_encoding.json')
-    parser.add_argument('-b', '--boxes', type=str, default='', help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/boxes.npy')
+    parser.add_argument('-l', '--labels', type=str,
+                        help='--labels=C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/integer_encoding.json')
+    parser.add_argument('-b', '--boxes', type=str, default='',
+                        help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/boxes.npy')
     parser.add_argument('-s', '--num_shards', type=int, default=1000)
     return parser.parse_args()
 
@@ -48,7 +49,7 @@ def dict_to_tf_example(image_path, integer_label, boxes=None):
         an instance of tf.Example or None.
     """
     assert image_path.endswith('.JPEG')
-    with tf.gfile.GFile(image_path, 'rb') as f:
+    with tf.io.gfile.GFile(image_path, 'rb') as f:
         encoded_jpg = f.read()
 
     # check image format
@@ -154,16 +155,16 @@ def main():
         if num_examples_written == 0:
             shard_path = os.path.join(
                 output_dir, 'shard-%04d.tfrecords' % shard_id)
-            writer = tf.python_io.TFRecordWriter(shard_path)
+            writer = tf.io.TFRecordWriter(shard_path)
 
         image_path = T.path  # absolute path to an image
-        integer_label = label_encoder[T.wordnet_id]
+        #integer_label = label_encoder[T.wordnet_id]
         boxes = None  # validation images don't have boxes
         if bounding_boxes is not None:
             boxes = bounding_boxes.get(
                 T.just_name, np.empty((0, 4), dtype='float32'))
 
-        tf_example = dict_to_tf_example(image_path, integer_label, boxes)
+        tf_example = dict_to_tf_example(image_path, 0, boxes)
         if tf_example is None:
             num_skipped_images += 1
             continue
