@@ -1,6 +1,7 @@
 import io
 import os
 from PIL import Image
+# from PIL.Image
 import tensorflow as tf
 import json
 import numpy as np
@@ -27,11 +28,12 @@ python create_tfrecords.py \
 
 def make_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--metadata_file', type=str)
-    parser.add_argument('-o', '--output', type=str)
-    parser.add_argument('-l', '--labels', type=str)
-    parser.add_argument('-b', '--boxes', type=str, default='')
-    parser.add_argument('-s', '--num_shards', type=int, default=1)
+    parser.add_argument('-m', '--metadata_file=training.csv', type=str)
+    parser.add_argument(
+        '-o', '--output=/mnt/datasets/imagenet/train_shards/', type=str)
+    parser.add_argument('-l', '--labels=integer_encoding.json', type=str)
+    parser.add_argument('-b', '--boxes=boxes.npy', type=str, default='')
+    parser.add_argument('-s', '--num_shards=1000', type=int, default=1)
     return parser.parse_args()
 
 
@@ -150,14 +152,16 @@ def main():
     for T in tqdm(metadata.itertuples()):
 
         if num_examples_written == 0:
-            shard_path = os.path.join(output_dir, 'shard-%04d.tfrecords' % shard_id)
+            shard_path = os.path.join(
+                output_dir, 'shard-%04d.tfrecords' % shard_id)
             writer = tf.python_io.TFRecordWriter(shard_path)
 
         image_path = T.path  # absolute path to an image
         integer_label = label_encoder[T.wordnet_id]
         boxes = None  # validation images don't have boxes
         if bounding_boxes is not None:
-            boxes = bounding_boxes.get(T.just_name, np.empty((0, 4), dtype='float32'))
+            boxes = bounding_boxes.get(
+                T.just_name, np.empty((0, 4), dtype='float32'))
 
         tf_example = dict_to_tf_example(image_path, integer_label, boxes)
         if tf_example is None:
