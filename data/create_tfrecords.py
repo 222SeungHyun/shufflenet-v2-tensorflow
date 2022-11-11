@@ -27,14 +27,14 @@ python create_tfrecords.py \
 def make_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--metadata_file', type=str,
-                        help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/validation_metadata.csv')
+                        help='C:/Users/SeungHyun Lee/Documents/GitHub/shufflenet-v2-tensorflow/data/validation_metadata.csv')
     parser.add_argument(
-        '-o', '--output', type=str, help='D:/val_shard')
+        '-o', '--output', type=str, help='C:/Users/SeungHyun Lee/Documents/GitHub/shufflenet-v2-tensorflow/data/train_shards')
     parser.add_argument('-l', '--labels', type=str,
-                        help='--labels=C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/integer_encoding.json')
+                        help='--labels=C:/Users/SeungHyun Lee/Documents/GitHub/shufflenet-v2-tensorflow/data/integer_encoding.json')
     parser.add_argument('-b', '--boxes', type=str, default='',
-                        help='C:/Users/SeungHyunLee/Documents/shufflenet-v2-tensorflow/data/boxes.npy')
-    parser.add_argument('-s', '--num_shards', type=int, default=100)
+                        help='C:/Users/SeungHyun Lee/Documents/GitHub/shufflenet-v2-tensorflow/data/boxes.npy')
+    parser.add_argument('-s', '--num_shards', type=int, default=1000)
     return parser.parse_args()
 
 
@@ -160,9 +160,9 @@ def main():
         image_path = T.path  # absolute path to an image
         #integer_label = label_encoder[T.wordnet_id]
         boxes = None  # validation images don't have boxes
-        #if bounding_boxes is not None:
-        #    boxes = bounding_boxes.get(
-        #        T.just_name, np.empty((0, 4), dtype='float32'))
+        if bounding_boxes is not None:
+            boxes = bounding_boxes.get(
+                T.just_name, np.empty((0, 4), dtype='float32'))
 
         tf_example = dict_to_tf_example(image_path, 0, boxes)
         if tf_example is None:
